@@ -19,10 +19,26 @@ var LovelacePlayer = LovelacePlayer || (function() {
     return localStorage['lovelace-player-device-id'];
   };
 
-  _subscribe = function(hass) {
+  _play = function(src) {
+    if(src)
+      _audio.src = src;
+    _playing = true;
+    _audio.play();
+    _updateState();
+  };
+  _pause = function(src) {
+    _playing = false;
+    _audio.pause();
+    _updateState();
+  };
+
+  _subscribe = function() {
     if (_subscribed) { return; }
     _audio = new Audio();
     _subscribed = true;
+    _audio.addEventListener('ended', LovelacePlayer.pause);
+    _updateState();
+    hass = document.querySelector('home-assistant').hass;
     hass.connection.subscribeEvents((event) => {
       if(event.data.domain != 'media_player') { return; }
       let targets = event.data.service_data.entity_id;
@@ -31,37 +47,31 @@ var LovelacePlayer = LovelacePlayer || (function() {
       if(!istarget) { return; }
       switch(event.data.service) {
         case 'play_media':
-          _audio.src = event.data.service_data.media_content_id;
-          _playing = true;
-          _audio.play();
+          _play(event.data.service_data.media_content_id);
           break;
         case 'media_play':
-          _playing = true;
-          _audio.play();
+          _play();
           break;
         case 'media_play_pause':
           if(_playing) {
-            _playing = false;
-            _audio.pause();
+            _pause();
             break;
           }
-          _playing = true;
-          _audio.play();
+          _play();
           break;
         case 'media_pause':
         case 'media_stop':
-          _playing = false;
-          _audio.pause();
+          _pause();
           break;
         case 'volume_set':
           _audio.volume = event.data.service_data.volume_level;
           break;
       }
-      _updateState(hass);
     }, 'call_service');
   };
 
-  _updateState = function(hass) {
+  _updateState = function() {
+    hass = document.querySelector('home-assistant').hass;
     _players.forEach(p => {
       hass.callApi('post', "fully_kiosk/media_player/"+p, {
         state: _playing? "playing":"idle",
@@ -86,6 +96,8 @@ var LovelacePlayer = LovelacePlayer || (function() {
     },
     showDeviceId: () => {
       document.querySelector("home-assistant").shadowRoot.querySelector("home-assistant-main").shadowRoot.querySelector("app-drawer-layout iron-pages partial-panel-resolver").shadowRoot.querySelector("#panel ha-panel-lovelace").shadowRoot.querySelector("hui-root").shadowRoot.querySelector("ha-app-layout app-header app-toolbar div[main-title]").innerHTML = "LovelacePlayer Device ID: " +_getDeviceId();
-    }
+    },
+    play: (src) => { _play(src); },
+    pause: () => { _pause(); },
   };
 }());
