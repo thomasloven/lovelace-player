@@ -41,7 +41,7 @@ resources:
 
 6. Bind your device to the `media_player` by editing
    `lovelace-player-config.js`. Also remove or comment out the line
-   `LovelacePlayer.showDeviceId();` to restore the lovelace main title.
+   `LovelacePlayer.debug();` to restore the lovelace main title.
 
 ```js
 setTimeout(function() {
@@ -50,7 +50,7 @@ setTimeout(function() {
   LovelacePlayer.bind("media_player.my_lovelace_player", "xxxxxxxx-xxxxxxxx");
 
   // Remove this line when you found your Device ID
-  // LovelacePlayer.showDeviceId();
+  // LovelacePlayer.debug();
 }, 200);
 ```
 
@@ -73,7 +73,7 @@ setTimeout(function() {
 - If your media player suddenly stops working one day, it might be because the
   localStorage has somehow gotten reset. I have no idea how, when or even if
   this might happen, but if it does, you will need to find the new Device ID by
-  readding `LovelacePlayer.showDeviceId()` to `lovelace-player-config.js` and
+  readding `LovelacePlayer.debug()` to `lovelace-player-config.js` and
   updating the bindings.
 
 - Refreshing or closing the page will stop playback without reporting the

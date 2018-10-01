@@ -73,17 +73,14 @@ var LovelacePlayer = LovelacePlayer || (function() {
   _updateState = function() {
     hass = document.querySelector('home-assistant').hass;
     _players.forEach(p => {
-      hass.callApi('post', "fully_kiosk/media_player/"+p, {
-        state: _playing? "playing":"idle",
-        attributes: {
+      let attr = Object.assign(hass.states[p].attributes, {
           volume_level: _audio.volume,
           media_content_id: _audio.src,
-          address: null,
-          battery_level: null,
-          screen_brightness: null,
           device_id: _getDeviceId(),
-          serial_number: 0,
-        },
+      });
+      hass.callApi('post', "fully_kiosk/media_player/"+p, {
+        state: _playing? "playing":"idle",
+        attributes: attr,
       });
     });
   };
@@ -94,8 +91,11 @@ var LovelacePlayer = LovelacePlayer || (function() {
       _players.push(media_player);
       _subscribe(document.querySelector('home-assistant').hass);
     },
-    showDeviceId: () => {
-      document.querySelector("home-assistant").shadowRoot.querySelector("home-assistant-main").shadowRoot.querySelector("app-drawer-layout iron-pages partial-panel-resolver").shadowRoot.querySelector("#panel ha-panel-lovelace").shadowRoot.querySelector("hui-root").shadowRoot.querySelector("ha-app-layout app-header app-toolbar div[main-title]").innerHTML = "LovelacePlayer Device ID: " +_getDeviceId();
+    debug: () => {
+      let message = "";
+      _players.forEach(p => { message = message + " " + p; });
+      if (message === "") message = "NONE";
+      document.querySelector("home-assistant").shadowRoot.querySelector("home-assistant-main").shadowRoot.querySelector("app-drawer-layout iron-pages partial-panel-resolver").shadowRoot.querySelector("#panel ha-panel-lovelace").shadowRoot.querySelector("hui-root").shadowRoot.querySelector("ha-app-layout app-header app-toolbar div[main-title]").innerHTML = "LovelacePlayer Device ID: " +_getDeviceId() + "<br/>Bound to: " + message;
     },
     play: (src) => { _play(src); },
     pause: () => { _pause(); },
