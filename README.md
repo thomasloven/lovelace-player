@@ -13,8 +13,8 @@ can now receive text-to-speech announcements from home-assistant.
    `<ha config>/www/lovelace-player-config.js`.
 
 3. Download `floorplan_speaker.py` from
-   [pkozul/ha-floorplay-kiosk](https://github.com/pkozul/ha-floorplan-kiosk) to
-   `<ha config>/custom_components/media_player/floorplay_speaker.py`
+   [pkozul/ha-floorplan-kiosk](https://github.com/pkozul/ha-floorplan-kiosk) to
+   `<ha config>/custom_components/media_player/floorplan_speaker.py`
 
 4. Add a `media_player` to your home assistant config
 
