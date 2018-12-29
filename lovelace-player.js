@@ -95,7 +95,14 @@ var LovelacePlayer = LovelacePlayer || (function() {
       let message = "";
       _players.forEach(p => { message = message + " " + p; });
       if (message === "") message = "NONE";
-      document.querySelector("home-assistant").shadowRoot.querySelector("home-assistant-main").shadowRoot.querySelector("app-drawer-layout iron-pages partial-panel-resolver").shadowRoot.querySelector("#panel ha-panel-lovelace").shadowRoot.querySelector("hui-root").shadowRoot.querySelector("ha-app-layout app-header app-toolbar div[main-title]").innerHTML = "LovelacePlayer Device ID: " +_getDeviceId() + "<br/>Bound to: " + message;
+      document
+        .querySelector("home-assistant")
+        .shadowRoot.querySelector("home-assistant-main")
+        .shadowRoot.querySelector("app-drawer-layout partial-panel-resolver")
+        .shadowRoot.querySelector("#panel ha-panel-lovelace")
+        .shadowRoot.querySelector("hui-root")
+        .shadowRoot.querySelector("ha-app-layout app-header app-toolbar div[main-title]")
+        .innerHTML = "LovelacePlayer Device ID: " +_getDeviceId() + "<br/>Bound to: " + message;
     },
     play: (src) => { _play(src); },
     pause: () => { _pause(); },
