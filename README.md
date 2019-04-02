@@ -1,81 +1,68 @@
-# lovelace-player
+lovelace-player
+===============
 
-Lets any browser currently viewing your lovelace interface act as an audio
-receiver with a `media_player` interface.
+Use any browser currently viewing your lovelace interface as an audio receiver with a `media_player` interface.
 
-Example use case: An iPad mounted to your wall as a home automation dashboard,
-can now receive text-to-speech announcements from home-assistant.
+Example use case: An iPad mounted to your wall as a home automation dashboard can now receive text-to-speech announcements from home-assistant.
 
-## Installation
+# Breaking changes!
+Lovelace-player configuration has recently changed entirely.
+See below for setup instructions.
 
-1. Copy `lovelace-player.js` and `lovelace-player-config.js` to
-   `<ha config>/www/lovelace-player.js` and
-   `<ha config>/www/lovelace-player-config.js`.
+# Installation instructions
 
-3. Download `floorplan_speaker.py` from
-   [pkozul/ha-floorplan-kiosk](https://github.com/pkozul/ha-floorplan-kiosk) to
-   `<ha config>/custom_components/media_player/floorplan_speaker.py`
+This plugin requires [card-tools](https://github.com/thomasloven/lovelace-card-tools) to be installed.
 
-4. Add a `media_player` to your home assistant config
+For installation instructions [see this guide](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins).
+
+The recommended type of this plugin is: `js`.
+
+After installing the plugin, you also need to install the `floorplan_speaker` media player component.
+
+Download `floorplay_speaker.py` from [pkozul/ha-floorplan-kiosk](https://github.com/pkozul/ha-floorplan-kiosk) and save to `<ha config>/custom_components/floorplay_speaker/media_player.py`.
+
+# Usage instructions
+
+First, you need to add a media player to your home assistant configuration, which your lovelace interface will connect to.
+
+Add the following to your `configuration.yaml`
 
 ```yaml
 media_player:
   - platform: floorplan_speaker
-    name: my_lovelace_player
+    name: my_floorplan_speaker
 ```
 
-5. Add the `.js` files as resources in `ui-lovelace.yaml`
+The connection is then setup in the resources section (where you imported `lovelace-player.js` to your lovelace configuration, by adding one or more variables on the form `<entity-id>=<device-id>` to the script URL:
 
 ```yaml
 resources:
-  - url: /local/lovelace-player.js
+  - url: /local/card-tools.js
     type: js
-  - url: /local/lovelace-player-config.js
+  - url: /local/lovelace-player.js?<entity-id>=<device-id>
     type: js
 ```
 
-5. On the device you wish to use as a receiver, browse to your lovelace UI.
-   You'll find that the main title of the page has been replaced with the words
-   `LovelacePlayer Device ID:` followed by a hexadecimal number on the form
-   `xxxxxxxx-xxxxxxxx`. This is your Device ID.
+`<entity-id>` is the entity id of your `media_player`, e.g. `media_player.my_floorplan_speaker`.
 
-6. Bind your device to the `media_player` by editing
-   `lovelace-player-config.js`. Also remove or comment out the line
-   `LovelacePlayer.debug();` to restore the lovelace main title.
+`<device-id>` is the device ID for your device-browser combination (see below).
 
-```js
-setTimeout(function() {
+To add more players, you add more `<entity-id>=<device-id>` combinations to the url, separated by an ampersand `&`.
 
-  // Add your bindings here
-  LovelacePlayer.bind("media_player.my_lovelace_player", "xxxxxxxx-xxxxxxxx");
 
-  // Remove this line when you found your Device ID
-  // LovelacePlayer.debug();
-}, 200);
-```
+## About device IDs
 
-## Notes:
+The Device ID is a random number that is generated the first time you view the lovelace UI in a new browser after installing `card-tools`. It is stored in your browsers localStorage and *can not* be accessed or used to identify your browser by any other website (this is not true for Fully Kiosk browser for Android).
 
-- You will probably need to somehow invalidate your browser cache after any
-  change to `lovelace-player-config.js`. If you're not using
-  [lovelace-gen](http://github.com/thomasloven/homeassistant-lovelace-gen),
-  which handles that automatically via the `!resource` directive, this can be
-  done by adding `?number` after the filename in the resource list of
-  `ui-lovelace.yaml` - where `number` is a number which you increment after
-  each change.
+To get your Deice ID, the easiest method is to look in your browser console (press F12 in google Chrome, most browsers have something similar). There you should be able to see a message saying "CARD-TOOLS IS INSTALLED" followed by your Device ID.
 
-- The Device ID is a random number that is generated the first time you view
-  the lovelace UI in a new browser after installing lovelace-player. It is
-  stored in your browsers localStorage and *cannot* be accessed or used to
-  identify your browser by any other website. This is not true for Fully Kiosk
-  Browser for Android.
+![id-cardtools](https://user-images.githubusercontent.com/1299821/55386101-08bdef80-552f-11e9-9916-30edbe760b0e.jpg)
 
-- If your media player suddenly stops working one day, it might be because the
-  localStorage has somehow gotten reset. I have no idea how, when or even if
-  this might happen, but if it does, you will need to find the new Device ID by
-  readding `LovelacePlayer.debug()` to `lovelace-player-config.js` and
-  updating the bindings.
 
-- Refreshing or closing the page will stop playback without reporting the
-  status change back to home-assistant. Switching view within lovelace should
-  not stop playback.
+If you don't have access to the console (e.g. on a mobile browser), you can add the variable `getID=true` to the script URL. You should then get a popup displaying your Device ID the next time you reload your lovelace interface.
+
+![id-example](https://user-images.githubusercontent.com/1299821/55386117-14111b00-552f-11e9-94bc-b019841e373e.jpg)
+
+
+---
+<a href="https://www.buymeacoffee.com/uqD6KHCdJ" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
