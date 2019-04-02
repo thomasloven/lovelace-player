@@ -19,7 +19,7 @@ The recommended type of this plugin is: `js`.
 
 After installing the plugin, you also need to install the `floorplan_speaker` media player component.
 
-Download `floorplay_speaker.py` from [pkozul/ha-floorplan-kiosk](https://github.com/pkozul/ha-floorplan-kiosk) and save to `<ha config>/custom_components/floorplay_speaker/media_player.py`.
+Download `floorplan_speaker.py` from [pkozul/ha-floorplan-kiosk](https://github.com/pkozul/ha-floorplan-kiosk) and save to `<ha config>/custom_components/floorplan_speaker/media_player.py`.
 
 # Usage instructions
 
