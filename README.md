@@ -1,6 +1,8 @@
 lovelace-player
 ===============
 
+# This is deprecated - Use [browser_mod](https://github.com/thomasloven/hass-browser_mod) instead
+
 Use any browser currently viewing your lovelace interface as an audio receiver with a `media_player` interface.
 
 Example use case: An iPad mounted to your wall as a home automation dashboard can now receive text-to-speech announcements from home-assistant.
